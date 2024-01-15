@@ -9,19 +9,24 @@ public class PlayerControl : MonoBehaviour
 
     [SerializeField] private float speed;
 
-    [SerializeField] private Transform camera_pos;
+    //[SerializeField] private Transform camera_pos;
     [SerializeField] private GameObject focalPoint;
 
     private bool hasPowerup;
 
-    private float power = 50f;
+    private float power = 10f;
 
+
+    [SerializeField] private GameObject[] powerupIndicator;
     
 
     //private float forwardInput;
 
-
     private float vertical;
+
+    [SerializeField] private int lives = 3;
+
+    private bool isGameOver;
 
 
 
@@ -31,21 +36,51 @@ public class PlayerControl : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         hasPowerup = false;
+        lives = 3;
+        isGameOver = false;
     }
     void Start()
     {
-        
+        HideIndicators();
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (isGameOver)
+        {
+            return;
+        }
+
         vertical = Input.GetAxis("Vertical");
 
-        
-        
-
         rb.AddForce(focalPoint.transform.forward * speed * vertical);
+
+
+        if (transform.position.y < -5)
+        {
+            lives--;
+            if (lives <= 0)
+            {
+
+                Destroy(gameObject);
+
+            }
+            else
+            {
+                transform.position = new Vector3(0, 0, 0);
+                rb.velocity = Vector3.zero;
+            }
+
+            //rb.
+
+            
+
+        }
+
+
+
 
         
     }
@@ -87,9 +122,41 @@ public class PlayerControl : MonoBehaviour
 
     private IEnumerator PowerupCountdown()
     {
-        yield return new WaitForSeconds(6);
+        
+        
+        for (int i = 0; i < powerupIndicator.Length; i++)
+        {
+            
+            powerupIndicator[i].SetActive(true);
+            yield return new WaitForSeconds(2);
+            HideIndicators();
+            
+        }
+
+        
 
         hasPowerup = false;
+    }
+
+
+    private void fall()
+    {
+
+        lives--;
+
+
+    }
+    private void test1()
+    {
+        
+    }
+
+    private void HideIndicators()
+    {
+        foreach (GameObject indicator in powerupIndicator)
+        {
+            indicator.SetActive(false);
+        }
     }
 
 

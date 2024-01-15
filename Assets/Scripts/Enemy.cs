@@ -35,15 +35,18 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        
+        if(transform.position.y <-5)
+        {
+            Destroy(gameObject);
+        }
 
         Vector3 direction = (player.transform.position - transform.position).normalized;
 
         rb.AddForce(direction * speed);
 
-        if(transform.position.y <-1)
-        {
-            Destroy(gameObject);
-        }
+        
 
         
     }
